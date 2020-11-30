@@ -1,5 +1,5 @@
 import Card from "@material-ui/core/Card";
-import { createMuiTheme, Theme } from "@material-ui/core/styles";
+import { createMuiTheme } from "@material-ui/core/styles";
 import { darken, fade } from "@material-ui/core/styles/colorManipulator";
 import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";

@@ -132,6 +132,7 @@ export const MessageManagerTemplate = props => {
                 [classes.progressBarWarning]: status === "warning",
                 [classes.progressBarError]: status === "error"
               })}
+              // eslint-disable-next-line
               style={{ ["--animationTime" ]: `${timeout}ms` }}
             />
           </div>

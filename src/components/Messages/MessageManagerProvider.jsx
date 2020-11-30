@@ -40,7 +40,7 @@ const MessageManagerProvider = ({ children }) => {
       currentNotifications.filter(n => n.id !== notificationId)
     );
   }, []);
-
+// eslint-disable-next-line
   const show = useCallback((message = {}, timeout = 3000) => {
     const id = Date.now();
     const notification = {
@@ -66,7 +66,8 @@ const MessageManagerProvider = ({ children }) => {
     setNotifications(state => [notification, ...state]);
 
     return notification;
-  }, []);
+    // eslint-disable-next-line
+  },[]);
 
   const getCurrentTimer = (notification) => {
     const currentTimerIndex = timersArr.current.findIndex(
