@@ -7,7 +7,6 @@ import JssProvider from 'react-jss/lib/JssProvider';
 import { create } from 'jss';
 import { createGenerateClassName, jssPreset } from '@material-ui/core/styles';
 import MessageManagerProvider from "./components/Messages";
-import AppStateProvider from "./containers/AppState";
 const generateClassName = createGenerateClassName();
 const jss = create({
   ...jssPreset(),

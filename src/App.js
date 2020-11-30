@@ -48,88 +48,92 @@ function App() {
   const classes = useStyles({})
 
   const [movies, setMovies] = useState([]);
-  const [web3Instance, setWeb3Instance] = useState(undefined);
   const [accounts, setAccounts] = useState([]);
   const [contractInstance, setContractInstance] = useState(undefined);
   const [loading, setLoading] = useState(false);
 
   const notify = useNotifier();
-  useEffect(async () => {
-    try {
-      // Get network provider and web3 instance.
-      const web3 = await getWeb3();
-      setWeb3Instance(web3);
-
-      // Use web3 to get the user's accounts.
-      const accounts = await web3.eth.getAccounts();
-
-      setAccounts(accounts)
-
-      // Get the contract instance.
-      const networkId = await web3.eth.net.getId();
-
-      const deployedNetwork = MovieRatingContract.networks[networkId];
-      const instance = new web3.eth.Contract(
-        MovieRatingContract.abi,
-        deployedNetwork && deployedNetwork.address,
-      );
-
-      setContractInstance(instance);
-      ///Dont use contractInstance because setState is a async call
-      try {
-
-        setLoading(true);
-
-        let movies = await instance.methods.getMovies().call();
-
-        for (const [i, movie] of movies.entries()) {
-          let { totalRater, totalRating } = await instance.methods.movieRatings(i).call();
-          let rating = 0;
-          if (parseInt(totalRater) !== 0) {
-            rating = parseInt(totalRating) / parseInt(totalRater);
-            rating = rating.toFixed(2);
-          }
 
 
-          MovieApi.get(`?t=${movie}&apikey=${api_key}`)
-            .then(res => {
-              const { data: { Poster, Plot, Response } } = res;
-
-              if (Response) {
-                setMovies(prevState => [...prevState, { name: movie, poster: Poster, plot: Plot, rating: rating }]);
-
-              } else {
-                setMovies(prevState => [...prevState, { name: movie, poster: null, plot: null, rating: rating }]);
-
+  useEffect(
+    
+    (notify) => {
+      (async () => {
+        try {
+          // Get network provider and web3 instance.
+          const web3 = await getWeb3();
+    
+          // Use web3 to get the user's accounts.
+          const accounts = await web3.eth.getAccounts();
+    
+          setAccounts(accounts)
+    
+          // Get the contract instance.
+          const networkId = await web3.eth.net.getId();
+    
+          const deployedNetwork = MovieRatingContract.networks[networkId];
+          const instance = new web3.eth.Contract(
+            MovieRatingContract.abi,
+            deployedNetwork && deployedNetwork.address,
+          );
+    
+          setContractInstance(instance);
+          ///Dont use contractInstance because setState is a async call
+          try {
+    
+            setLoading(true);
+    
+            let movies = await instance.methods.getMovies().call();
+    
+            for (const [i, movie] of movies.entries()) {
+              let { totalRater, totalRating } = await instance.methods.movieRatings(i).call();
+              let rating = 0;
+              if (parseInt(totalRater) !== 0) {
+                rating = parseInt(totalRating) / parseInt(totalRater);
+                rating = rating.toFixed(2);
               }
-
-            })
-
+    
+    
+              MovieApi.get(`?t=${movie}&apikey=${api_key}`)
+                .then(res => {
+                  const { data: { Poster, Plot, Response } } = res;
+    
+                  if (Response) {
+                    setMovies(prevState => [...prevState, { name: movie, poster: Poster, plot: Plot, rating: rating }]);
+    
+                  } else {
+                    setMovies(prevState => [...prevState, { name: movie, poster: null, plot: null, rating: rating }]);
+    
+                  }
+    
+                })
+    
+            }
+    
+    
+    
+          } catch (e) {
+            
+            notify({
+              status: "error",
+              text: "Something went wrong."
+            });
+          }finally{
+            setLoading(false);
+          }
+    
+    
+        } catch (error) {
+          // Catch any errors for any of the above operations.
+          notify({
+            status: "error",
+            text: `Please check Metamask provider.`,
+          });
+          
+    
         }
-
-
-
-      } catch (e) {
-        const { reason } = e;
-        notify({
-          status: "error",
-          text: "Something went wrong."
-        });
-      }finally{
-        setLoading(false);
-      }
-
-
-    } catch (error) {
-      // Catch any errors for any of the above operations.
-      notify({
-        status: "error",
-        text: `Please check Metamask provider.`,
-      });
-      
-
-    }
-  }, [])
+      })();
+    }, [])
 
   const handleVote = async (movieName, rating) => {
 

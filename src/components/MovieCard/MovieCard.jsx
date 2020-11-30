@@ -22,7 +22,7 @@ const MovieCard = ({movie,onVote}) => {
   const [error, setError] = useState(undefined);
 
   useEffect(() => {
-    if(newRating % 1 != 0){
+    if(newRating % 1 !== 0){
       setError("Decimals not allowed");
     }else{
       setError(undefined);
@@ -31,7 +31,7 @@ const MovieCard = ({movie,onVote}) => {
 
   const handleVoteClick = () => {
 
-    if(newRating ==0 || newRating < 0 ){
+    if(newRating ===0 || newRating < 0 ){
       setError("Invalid Rating Value");
     }else{
       onVote(name, newRating);
