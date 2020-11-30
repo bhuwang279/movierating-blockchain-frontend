@@ -252,7 +252,6 @@ function App() {
         <TextField
           error={!!error}
           value={newMovieName}
-          defaultValue="Only Contract owner can add"
           name="newMovieName"
           helperText={error || " "}
           onChange={(e) => setNewMovieName(e.target.value)}
