@@ -2,7 +2,7 @@ import MovieRatingContract from "./contracts/MovieRating.json";
 import getWeb3 from "./getWeb3";
 import './App.css';
 import React, { useEffect, useState } from "react";
-import useNotifier from "./hooks/useNotifier";
+import useNotifier from "./containers/hooks/useNotifier";
 import { Button, LinearProgress, makeStyles, TextField } from "@material-ui/core";
 import MovieCard from "./components/MovieCard";
 import MovieApi from "./config";
@@ -197,10 +197,10 @@ function App() {
             const { data: { Poster, Plot, Response } } = res;
 
             if (Response) {
-              setMovies(prevState => [{ name: movieName, poster: Poster, plot: Plot, rating: rating },...prevState]);
+              setMovies(prevState => [...prevState,{ name: movieName, poster: Poster, plot: Plot, rating: rating }]);
 
             } else {
-              setMovies(prevState => [{ name: movieName, poster: null, plot: null, rating: rating },...prevState]);
+              setMovies(prevState => [...prevState,{ name: movieName, poster: null, plot: null, rating: rating }]);
 
             }
             notify({
@@ -213,10 +213,9 @@ function App() {
 
 
     } catch (e) {
-      console.log(e);
       notify({
         status: "error",
-        text: "Something went wrong."
+        text: "OOps!! Only contract owner can add movie."
       });
     }finally{
       setLoading(false);
@@ -249,6 +248,7 @@ function App() {
         <TextField
           error={!!error}
           value={newMovieName}
+          defaultValue="Only Contract owner can add"
           name="newMovieName"
           helperText={error || " "}
           onChange={(e) => setNewMovieName(e.target.value)}

@@ -1,4 +1,4 @@
-import {MessageContext } from "../components/Messages";
+import {MessageContext } from "../../components/Messages";
 import { useContext } from "react";
 
 function useNotifier() {
