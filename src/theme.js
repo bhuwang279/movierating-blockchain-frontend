@@ -15,7 +15,7 @@ export const ICONBUTTON_SIZE = 48;
 
 const fontFamily = '"roboto", "Inter", "sans-serif"';
 
-export default (colors) =>
+const theme = (colors) =>
   createMuiTheme({
     overrides: {
       MuiButton: {
@@ -321,3 +321,4 @@ Card.defaultProps = {
 Typography.defaultProps = {
   component: "div"
 };
+export default theme;
